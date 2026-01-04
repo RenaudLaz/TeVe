@@ -1,4 +1,3 @@
-
 name: Flutter Build APK
 on: [push, workflow_dispatch]
 
@@ -8,20 +7,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Set up JDK 17
+      - name: Set up JDK 11 # Les anciens projets Flutter préfèrent Java 11
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '11'
           distribution: 'temurin'
 
-      - uses: subosito/flutter-action@v2
+      - name: Install Flutter (Legacy Version)
+        uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.3.10' # On force la version compatible
           channel: 'stable'
 
       - name: Get dependencies
         run: flutter pub get
 
-      # Correction ici : on cherche le fichier gradlew partout dans le projet
       - name: Make gradlew executable
         run: find . -name "gradlew" -exec chmod +x {} +
 
@@ -31,5 +31,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: TeVe-App-Fold
-          path: "**/*.apk" # Cherche tous les fichiers .apk générés
+          name: TeVe-App-Compatible
+          path: "**/*.apk"
